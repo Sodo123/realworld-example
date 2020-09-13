@@ -5,6 +5,7 @@ var http = require('http'),
     bodyParser = require('body-parser'),
     session = require('express-session'),
     cors = require('cors'),
+    passport = require('passport')
     errorhandler = require('errorhandler'),
     mongoose = require('mongoose');
 
@@ -51,7 +52,7 @@ const sessionStore = new MongoStore({ mongooseConnection: connection, collection
 
 app.use(session({ 
   secret: 'conduit', 
-  cookie: { maxAge: 60000 }, 
+  cookie: { maxAge: 24 * 3600 * 1000 }, 
   resave: false, 
   saveUninitialized: true,
   store: sessionStore,
@@ -63,7 +64,9 @@ app.use(session({
 require('./models/User');
 require('./models/Article');
 require('./models/Comment');
-//require('./config/passport');
+require('./config/passport');
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(require('./routes'));
 
@@ -74,7 +77,7 @@ app.use(function(req, res, next) {
   next(err);
 });
 
-/// error handlers
+// / error handlers
 
 // development error handler
 // will print stacktrace
@@ -91,9 +94,7 @@ if (!isProduction) {
   });
 }
 
-var  passport = require('./config/passport');
-app.use(passport.initialize());
-app.use(passport.session());
+
 // production error handler
 // no stacktraces leaked to user
 app.use(function(err, req, res, next) {
@@ -102,11 +103,6 @@ app.use(function(err, req, res, next) {
     message: err.message,
     error: {}
   }});
-});
-
-app.get('/login-success', (req, res, next) => {
-  console.log(req.session);
-  res.send('You successfully logged in.');
 });
 
 // finally, let's start our server...

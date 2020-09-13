@@ -4,8 +4,8 @@ var mongoose = require('mongoose');
 var User = mongoose.model('User');
 
 passport.use(new LocalStrategy({
-  usernameField: 'user[email]',
-  passwordField: 'user[password]'
+  usernameField: 'email',
+  passwordField: 'password'
 }, function(email, password, cb) {
   console.log('email ', email, password);
   User.findOne({email: email}).then(function(user){
@@ -19,15 +19,16 @@ passport.use(new LocalStrategy({
 }));
 
 passport.serializeUser(function(user, cb) {
+  console.log('serializeUser');
   cb(null, user.id);
 });
 
 passport.deserializeUser(function(id, cb) {
+  console.log('deserializeUser');
   User.findById(id, function (err, user) {
       if (err) { return cb(err); }
       cb(null, user);
   });
 });
 
-module.exports = passport;
 
