@@ -1,0 +1,24 @@
+extends ../layout
+ 
+block content
+    div.header.container.text-center
+      div.profile-section.pt-3.pt-lg-0
+        img.profile-image.mb-3.rounded-circle.mx-auto(src="../images/profile.png", alt="image")
+        div.bio.mb-3 Hi, my name is Anthony Doe. Briefly introduce yourself here. You can also provide a link to the about page. <br>
+            a(href="about.html") Find out more about me
+        ul.social-list.list-inline.py-3.mx-auto
+            li.list-inline-item
+                a(href="#")
+                    i.fab.fa-twitter.fa-fw
+            li.list-inline-item
+                a(href="#")
+                    i.fab.fa-linkedin-in.fa-fw
+            li.list-inline-item
+                a(href="#")
+                    i.fab.fa-github-alt.fa-fw
+            li.list-inline-item
+                a(href="#")
+                    i.fab.fa-stack-overflow.fa-fw
+            li.list-inline-item
+                a(href="#")
+                    i.fab.fa-codepen.fa-fw

@@ -9,14 +9,18 @@ const isAdmin = require('../authMiddleware').isAdmin;
 router.param('username', function(req, res, next, username){
   User.findOne({username: username}).then(function(user){
     if (!user) { return res.sendStatus(404); }
-
+    console.log('username ', username);
     req.profile = user;
 
     return next();
   }).catch(next);
 });
 
-router.get('/:username', auth.optional, function(req, res, next){
+router.get('/', (req, res) => {
+  res.render('./profiles/index', { message: req.flash('message') });
+});
+
+router.get('/:username', function(req, res, next){
   if(req.payload){
     User.findById(req.payload.id).then(function(user){
       if(!user){ return res.json({profile: req.profile.toProfileJSONFor(false)}); }
@@ -28,7 +32,7 @@ router.get('/:username', auth.optional, function(req, res, next){
   }
 });
 
-router.post('/:username/follow', auth.required, function(req, res, next){
+router.post('/:username/follow', isAuth, function(req, res, next){
   var profileId = req.profile._id;
 
   User.findById(req.payload.id).then(function(user){
@@ -40,7 +44,7 @@ router.post('/:username/follow', auth.required, function(req, res, next){
   }).catch(next);
 });
 
-router.delete('/:username/follow', auth.required, function(req, res, next){
+router.delete('/:username/follow', isAuth, function(req, res, next){
   var profileId = req.profile._id;
 
   User.findById(req.payload.id).then(function(user){

@@ -4,7 +4,7 @@ var passport = require('passport');
 const isAuth = require('../authMiddleware').isAuth;
 const isAdmin = require('../authMiddleware').isAdmin;
 
-router.post('/login', passport.authenticate('local', { failureRedirect: '/login-failure', successRedirect: '/' }));
+router.post('/login', passport.authenticate('local', { failureRedirect: '/login-failure', successRedirect: '/user/' }));
 
 router.get('/login',(req, res, next) => {
     res.render('./users/login', { message: req.flash('message') });
@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
     if (req.isAuthenticated()) {
         res.send(req.user);
     }else {
-        res.send('<p>You need to  <a href="/login">Login</a> first</p>')
+        res.send('<p>You need to  <a href="/user/login">Login</a> first</p>')
     }
 });
 
