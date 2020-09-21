@@ -21,12 +21,8 @@ router.get('/', (req, res) => {
 });
 
 router.get('/:username', function(req, res, next){
-  if(req.payload){
-    User.findById(req.payload.id).then(function(user){
-      if(!user){ return res.json({profile: req.profile.toProfileJSONFor(false)}); }
-
-      return res.json({profile: req.profile.toProfileJSONFor(user)});
-    });
+  if(req.profile){
+    return res.render('./profiles/index', {profile: req.profile});
   } else {
     return res.json({profile: req.profile.toProfileJSONFor(false)});
   }
