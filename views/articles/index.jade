@@ -1,0 +1,25 @@
+extends ../layout
+ 
+block content
+	section.blog-list.px-3.py-5.p-md-5
+		div.container
+			for article in articles
+				div.item.mb-5
+					div.media
+						img.mr-3.img-fluid.post-thumb.d-none.d-md-flex(src="/images/blog/blog-post-thumb-7.jpg" alt="image")
+						div.media-body
+							h3.title.mb-1
+								a(href="blog-post.html") #{article.title}
+							div.meta.mb-1
+								span.date #{article.createdAt}
+								span.time 5 min read
+								span.comment
+									a(href="#") 4 comments
+							div.intro #{article.description}
+							a.more-link(href="blog-post.html") Read more &rarr;
+				
+			nav.blog-nav.nav.nav-justified.my-5
+				a.nav-link-prev.nav-item.nav-link.rounded-left(href="index.html") Previous 
+				i.arrow-prev.fas.fa-long-arrow-alt-left
+				a.nav-link-next.nav-item.nav-link.rounded-right(href="blog-list.html") Next
+				i.arrow-next.fas.fa-long-arrow-alt-right

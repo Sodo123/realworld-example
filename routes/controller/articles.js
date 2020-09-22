@@ -78,12 +78,11 @@ router.param('article', function(req, res, next, slug) {
         var articlesCount = results[1];
         var user = results[2];
   
-        return res.json({
-          articles: articles.map(function(article){
+        return    res.render('./articles/index',
+          {articles: articles.map(function(article){
             return article.toJSONFor(user);
-          }),
-          articlesCount: articlesCount
-        });
+          })},
+        );
       });
     }).catch(next);
   });
