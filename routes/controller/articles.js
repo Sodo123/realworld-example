@@ -140,12 +140,10 @@ router.param('article', function(req, res, next, slug) {
   // return a article
   router.get('/:article', function(req, res, next) {
     Promise.all([
-      req.payload ? User.findById(req.payload.id) : null,
       req.article.populate('author').execPopulate()
     ]).then(function(results){
-      var user = results[0];
-  
-      return res.json({article: req.article.toJSONFor(user)});
+      return  res.render('./articles/detail',
+                {article: req.article});
     }).catch(next);
   });
   

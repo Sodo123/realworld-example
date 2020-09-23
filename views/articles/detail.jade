@@ -1,0 +1,19 @@
+extends ../layout
+ 
+block content
+    div.main-wrapper
+        article.blog-post.px-3.py-5.p-md-5
+            div.container
+                header.blog-post-header
+                    h2.title.mb-2 #{article.title}
+                    div.meta.mb-3
+                        span.date Publised #{article.createdAt}
+                        span.time #{article.author.username}
+                        span.comment 4 comments
+                div.blog-post-body
+                    figure.blog-banner
+                        a(href="https://made4dev.com")
+                            img.img-fluid(src=article.image, alt="image")
+                        figcaption.mt-2.text-center.image-caption Image Credit: 
+                            a(href="#", target="_blank") made4dev.com (Premium Programming T-shirts)
+                        p #{article.body}
