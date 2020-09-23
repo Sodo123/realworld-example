@@ -161,6 +161,10 @@ router.put('/:article', auth.required, function(req, res, next) {
         req.article.description = req.body.article.description;
       }
 
+      if(typeof req.body.article.image !== 'undefined'){
+        req.article.image = req.body.article.image;
+      }
+
       if(typeof req.body.article.body !== 'undefined'){
         req.article.body = req.body.article.body;
       }

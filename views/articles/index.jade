@@ -6,13 +6,13 @@ block content
 			for article in articles
 				div.item.mb-5
 					div.media
-						img.mr-3.img-fluid.post-thumb.d-none.d-md-flex(src="/images/blog/blog-post-thumb-7.jpg" alt="image")
+						img.mr-3.img-fluid.post-thumb.d-none.d-md-flex(src=article.image alt="image")
 						div.media-body
 							h3.title.mb-1
 								a(href="blog-post.html") #{article.title}
 							div.meta.mb-1
 								span.date #{article.createdAt}
-								span.time 5 min read
+								span.time #{article.author.username}
 								span.comment
 									a(href="#") 4 comments
 							div.intro #{article.description}
