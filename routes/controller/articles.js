@@ -99,28 +99,27 @@ router.param('article', function(req, res, next, slug) {
       offset = req.query.offset;
     }
   
-    User.findById(req.payload.id).then(function(user){
-      if (!user) { return res.sendStatus(401); }
+
+      if (!req.user) { return res.sendStatus(401); }
   
       Promise.all([
-        Article.find({ author: {$in: user.following}})
+        Article.find({ author: {$in: req.user.following}})
           .limit(Number(limit))
           .skip(Number(offset))
           .populate('author')
           .exec(),
-        Article.count({ author: {$in: user.following}})
+        Article.count({ author: {$in: req.user.following}})
       ]).then(function(results){
         var articles = results[0];
         var articlesCount = results[1];
   
-        return res.json({
-          articles: articles.map(function(article){
-            return article.toJSONFor(user);
-          }),
-          articlesCount: articlesCount
-        });
+        return  res.render('./articles/index',
+          {articles: articles.map(function(article){
+            return article.toJSONFor(req.user);
+          })},
+        );
       }).catch(next);
-    });
+
   });
   
   router.post('/', isAuth, function(req, res, next) {
