@@ -15,7 +15,7 @@ block content
 								span.time
 									a(href="../profiles/#{article.author.username}") #{article.author.username}
 								span.comment
-									a(href="#") 4 comments
+									a(href="#") #{article.comments.length} comments
 							div.intro #{article.description}
 							a.more-link(href="./#{article.slug}") Read more &rarr;
 				
