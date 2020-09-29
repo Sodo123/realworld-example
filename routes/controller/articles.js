@@ -81,7 +81,8 @@ router.param('article', function(req, res, next, slug) {
         return    res.render('./articles/index',
           {articles: articles.map(function(article){
             return article.toJSONFor(user);
-          })},
+          }),
+          moment: require('moment')},
         );
       });
     }).catch(next);
@@ -140,10 +141,11 @@ router.param('article', function(req, res, next, slug) {
   // return a article
   router.get('/:article', function(req, res, next) {
     Promise.all([
-      req.article.populate('author').execPopulate()
+      req.article.populate('author').populate('comments').execPopulate()
     ]).then(function(results){
       return  res.render('./articles/detail',
-                {article: req.article});
+                {article: req.article,
+                moment: require('moment')});
     }).catch(next);
   });
   

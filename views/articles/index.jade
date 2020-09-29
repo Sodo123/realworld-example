@@ -9,15 +9,15 @@ block content
 						img.mr-3.img-fluid.post-thumb.d-none.d-md-flex(src=article.image alt="image")
 						div.media-body
 							h3.title.mb-1
-								a(href="./#{article.slug}") #{article.title}
+								a(href="./articles/#{article.slug}") #{article.title}
 							div.meta.mb-1
-								span.date #{article.createdAt}
+								span.date #{moment(article.createdAt).format('llll')}
 								span.time
 									a(href="../profiles/#{article.author.username}") #{article.author.username}
 								span.comment
 									a(href="#") #{article.comments.length} comments
 							div.intro #{article.description}
-							a.more-link(href="./#{article.slug}") Read more &rarr;
+							a.more-link(href="./articles/#{article.slug}") Read more &rarr;
 				
 			nav.blog-nav.nav.nav-justified.my-5
 				a.nav-link-prev.nav-item.nav-link.rounded-left(href="index.html") Previous 
