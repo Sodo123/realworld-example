@@ -143,9 +143,22 @@ router.get('/:article', auth.optional, function(req, res, next) {
     req.payload ? User.findById(req.payload.id) : null,
     req.article.populate('author').populate('comments').execPopulate(),
     
-  ]).then(function(results){
+  ]).then( async function(results){
     var user = results[0];
-
+    const authorsIds = req.article.comments.map( cmt => cmt.author);
+    console.log(authorsIds);
+    const authors = await User.find({ _id : { $in : authorsIds} }, 'username image');
+    const authorObject = authors.reduce((obj, author) => {
+      console.log("author", author._id.toString());
+      const authorId = author._id.toString();
+      obj[authorId] = author;
+      return obj;
+    },{});
+    const comments = req.article.comments.map( cmt => {
+      cmt.author = authorObject[cmt.author];
+      return cmt;
+    });
+    req.article.comments = comments;
     return res.json({article: req.article.toJSONFor(user)});
   }).catch(next);
 });

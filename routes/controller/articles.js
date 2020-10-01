@@ -1,5 +1,6 @@
 var router = require('express').Router();
 var mongoose = require('mongoose');
+const { isArguments } = require('underscore');
 var User = mongoose.model('User');
 var Comment = mongoose.model('Comment');
 var Article = mongoose.model('Article');
@@ -75,7 +76,6 @@ router.param('article', function(req, res, next, slug) {
         req.payload ? User.findById(req.payload.id) : null,
       ]).then(function(results){
         var articles = results[0];
-        var articlesCount = results[1];
         var user = results[2];
   
         return    res.render('./articles/index',
@@ -139,13 +139,28 @@ router.param('article', function(req, res, next, slug) {
   });
   
   // return a article
+  
   router.get('/:article', function(req, res, next) {
     Promise.all([
       req.article.populate('author').populate('comments').execPopulate()
-    ]).then(function(results){
+    ]).then(async function(results){
+      const authorsIds = req.article.comments.map( cmt => cmt.author);
+      const authors = await User.find({ _id : { $in : authorsIds} }, 'username image');
+      const authorObject = authors.reduce((obj, author) => {
+        const authorId = author._id.toString();
+        obj[authorId] = author;
+        return obj;
+      },{});
+      const comments = req.article.comments.map( cmt => {
+        cmt.author = authorObject[cmt.author];
+        return cmt;
+      });
+      req.article.comments = comments;
       return  res.render('./articles/detail',
                 {article: req.article,
-                moment: require('moment')});
+                moment: require('moment'),
+                isAuthenticated : req.isAuthenticated()},
+                );
     }).catch(next);
   });
   
@@ -225,7 +240,7 @@ router.param('article', function(req, res, next, slug) {
   
   // return an article's comments
   router.get('/:article/comments', function(req, res, next){
-    Promise.resolve(req.payload ? User.findById(req.payload.id) : null).then(function(user){
+
       return req.article.populate({
         path: 'comments',
         populate: {
@@ -238,29 +253,29 @@ router.param('article', function(req, res, next, slug) {
         }
       }).execPopulate().then(function(article) {
         return res.json({comments: req.article.comments.map(function(comment){
-          return comment.toJSONFor(user);
+          return comment.toJSONFor(req.user);
         })});
       });
-    }).catch(next);
   });
   
   // create a new comment
   router.post('/:article/comments', isAuth, function(req, res, next) {
-    User.findById(req.payload.id).then(function(user){
-      if(!user){ return res.sendStatus(401); }
+
+      if(!req.user){ return res.sendStatus(401); }
   
-      var comment = new Comment(req.body.comment);
+      var comment = new Comment({"body": req.body.comment});
       comment.article = req.article;
-      comment.author = user;
+      comment.author = req.user;
   
       return comment.save().then(function(){
         req.article.comments.unshift(comment);
   
         return req.article.save().then(function(article) {
-          res.json({comment: comment.toJSONFor(user)});
+          res.redirect('/articles/' + req.article.slug );
+          //res.json({comment: comment.toJSONFor(user)});
         });
       });
-    }).catch(next);
+    ;
   });
   
   router.delete('/:article/comments/:comment', isAuth, function(req, res, next) {

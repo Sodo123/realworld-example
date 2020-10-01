@@ -7,9 +7,10 @@ block content
 				header.blog-post-header
 					h2.title.mb-2 #{article.title}
 					div.meta.mb-3
-						span.date Publised #{moment(article.createdAt).format('llll')}
+						span.date Publised #{moment(article.createdAt).format('ll')}
 						span.time 
 							a(href="../profiles/#{article.author.username}") #{article.author.username}
+						button.btn.btn-outline-primary.btn-sm Follow
 				div.blog-post-body
 					figure.blog-banner
 						a(href="https://made4dev.com")
@@ -21,7 +22,15 @@ block content
 					div.comment.mb-3
 						span.time #{comment.body}
 						div.meta 
-							span.date #{comment.author}
+							img.mr-1.rounded-circle(src="#{comment.author.image}", alt="", width = "20px")
+							span.date #{comment.author.username}
 							span.comment #{moment(comment.createdAt).fromNow()}
+				if isAuthenticated 
+					form(method='post', action='/articles/#{article.slug}/comments')
+						.input-group
+							input.form-control(type='text', placeholder='What do you think?', name='comment')
+							span.input-group-btn.ml-2
+								input.btn.btn-success(type='submit', value='Add Todo')
+
 						
 
