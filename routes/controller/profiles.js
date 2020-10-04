@@ -31,25 +31,22 @@ router.get('/:username', function(req, res, next){
 router.post('/:username/follow', isAuth, function(req, res, next){
   var profileId = req.profile._id;
 
-  User.findById(req.payload.id).then(function(user){
-    if (!user) { return res.sendStatus(401); }
 
-    return user.follow(profileId).then(function(){
+    if (!req.user) { return res.sendStatus(401); }
+
+    return req.user.follow(profileId).then(function(){
       return res.json({profile: req.profile.toProfileJSONFor(user)});
     });
-  }).catch(next);
+
 });
 
 router.delete('/:username/follow', isAuth, function(req, res, next){
   var profileId = req.profile._id;
+    if (!user.user) { return res.sendStatus(401); }
 
-  User.findById(req.payload.id).then(function(user){
-    if (!user) { return res.sendStatus(401); }
-
-    return user.unfollow(profileId).then(function(){
+    return req.user.unfollow(profileId).then(function(){
       return res.json({profile: req.profile.toProfileJSONFor(user)});
     });
-  }).catch(next);
 });
 
 module.exports = router;

@@ -142,7 +142,7 @@ router.param('article', function(req, res, next, slug) {
   
   router.get('/:article', function(req, res, next) {
     console.log('author ', req.article.author._id);
-    const isFollowing = req.user !== null ? req.user.isFollowing(req.article.author._id) : false;
+    const isFollowing = typeof(req.user) !== "undefined" ? req.user.isFollowing(req.article.author._id) : false;
     Promise.all([
       req.article.populate('author').populate('comments').execPopulate()
     ]).then(async function(results){
