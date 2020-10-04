@@ -141,6 +141,8 @@ router.param('article', function(req, res, next, slug) {
   // return a article
   
   router.get('/:article', function(req, res, next) {
+    console.log('author ', req.article.author._id);
+    const isFollowing = req.user !== null ? req.user.isFollowing(req.article.author._id) : false;
     Promise.all([
       req.article.populate('author').populate('comments').execPopulate()
     ]).then(async function(results){
@@ -151,6 +153,7 @@ router.param('article', function(req, res, next, slug) {
         obj[authorId] = author;
         return obj;
       },{});
+      
       const comments = req.article.comments.map( cmt => {
         cmt.author = authorObject[cmt.author];
         return cmt;
@@ -159,7 +162,9 @@ router.param('article', function(req, res, next, slug) {
       return  res.render('./articles/detail',
                 {article: req.article,
                 moment: require('moment'),
-                isAuthenticated : req.isAuthenticated()},
+                isAuthenticated : req.isAuthenticated(),
+                isFollowing: isFollowing
+                },
                 );
     }).catch(next);
   });

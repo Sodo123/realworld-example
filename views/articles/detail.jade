@@ -1,5 +1,10 @@
 extends ../layout
  
+script(type='text/javascript')
+	tinymce.init({
+		selector: 'textarea#mytextarea'
+	})
+
 block content
 	div.main-wrapper
 		article.blog-post.px-3.py-5.p-md-5
@@ -10,7 +15,8 @@ block content
 						span.date Publised #{moment(article.createdAt).format('ll')}
 						span.time 
 							a(href="../profiles/#{article.author.username}") #{article.author.username}
-						button.btn.btn-outline-primary.btn-sm Follow
+						form(method= isFollowing ? 'delete': 'post', action='../profiles/' + article.author.username + '/follow')
+							input.btn.btn-outline-primary.btn-sm(type='submit' value= isFollowing ? 'UnFollow' : 'Follow') 
 				div.blog-post-body
 					figure.blog-banner
 						a(href="https://made4dev.com")
@@ -30,7 +36,10 @@ block content
 						.input-group
 							input.form-control(type='text', placeholder='What do you think?', name='comment')
 							span.input-group-btn.ml-2
-								input.btn.btn-success(type='submit', value='Add Todo')
+								input.btn.btn-success(type='submit', value='Add Comment')
+				
+
+				
 
 						
 
