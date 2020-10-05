@@ -15,7 +15,7 @@ block content
 						span.date Publised #{moment(article.createdAt).format('ll')}
 						span.time 
 							a(href="../profiles/#{article.author.username}") #{article.author.username}
-						form(method= isFollowing ? 'delete': 'post', action='../profiles/' + article.author.username + '/follow')
+						form(method= isFollowing ? 'delete': 'post', action='/profiles/' + article.author.username + '/follow')
 							input.btn.btn-outline-primary.btn-sm(type='submit' value= isFollowing ? 'UnFollow' : 'Follow') 
 				div.blog-post-body
 					figure.blog-banner
