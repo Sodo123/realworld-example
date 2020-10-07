@@ -44,6 +44,12 @@ router.delete('/:username/follow', isAuth, function(req, res, next){
   var profileId = req.profile._id;
     if (!user.user) { return res.sendStatus(401); }
 
+<<<<<<< HEAD
+=======
+
+    if (!req.user) { return res.sendStatus(401); }
+
+>>>>>>> 1f2b742d7ca2bce4b0c7e6c2f3de0bcc689559f1
     return req.user.unfollow(profileId).then(function(){
       return res.json({profile: req.profile.toProfileJSONFor(user)});
     });
