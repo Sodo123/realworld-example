@@ -15,8 +15,7 @@ block content
 						span.date Publised #{moment(article.createdAt).format('ll')}
 						span.time 
 							a(href="../profiles/#{article.author.username}") #{article.author.username}
-						form(method= isFollowing ? 'delete': 'post', action='/profiles/' + article.author.username + '/follow')
-							input.btn.btn-outline-primary.btn-sm(type='submit' value= isFollowing ? 'UnFollow' : 'Follow') 
+						button#follow-btn.btn.btn-outline-primary.btn-sm(data-id=article.author.username) #{isFollowing ? 'UnFollow' : 'Follow'}
 				div.blog-post-body
 					figure.blog-banner
 						a(href="https://made4dev.com")
@@ -39,7 +38,27 @@ block content
 								input.btn.btn-success(type='submit', value='Add Comment')
 				
 
-				
+	script.
+		$('.meta').on('click', '#follow-btn', function(event) {
+		console.log('click');
+		event.preventDefault();
+		const username = $(this).attr('data-id');
+		const method = 'POST';
+		if (isFollowing) {
+			method = 'DELETE';
+		}
+		$.ajax({
+			url: '../profiles/' + username,
+			method: method,
+			data: { id: id }
+			}).done(function(res) {
+				if (res.success) {
+				console.log('id from ajax call is', res);
+				window.location.reload();
+			} else {
+				console.log('error...ajax');
+		}
+});
 
 						
 
